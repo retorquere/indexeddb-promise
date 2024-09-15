@@ -16,6 +16,12 @@
   ],
   "scripts": {
     "test": "tsc"
+    "preversion": "npm test",
+    "postversion": "git push --follow-tags",
+    "test": "tsc",
+    "pack": "npm test && npm pack",
+    "prepublishOnly": "npm install && npm test",
+    "ncu": "ncu -u && npm i && git add package.json package-lock.json && git commit -m ncu"
   },
   "author": {
     "name": "Stephen Paul Hassall",
