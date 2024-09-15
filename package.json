@@ -1,17 +1,17 @@
 {
-  "name": "@coderundebug/indexeddb-promise",
+  "name": "@retorquere/indexeddb-promise",
   "type": "module",
   "version": "1.0.2",
-  "description": "Use IndexedDB with promises.",
-  "repository": "github:StephenHassall/indexeddb-promise",
+  "description": "Use IndexedDB with promises + typescript typings",
+  "repository": "github:retorquere/indexeddb-promise",
   "funding": "https://github.com/StephenHassall/indexeddb-promise?sponsor=1",
-  "homepage": "https://github.com/StephenHassall/indexeddb-promise",
+  "homepage": "https://github.com/retorquere/indexeddb-promise",
   "bugs": {
-    "url": "https://github.com/StephenHassall/indexeddb-promise/issues",
-    "email": "StephenPaulHassall@hotmail.com"
+    "url": "https://github.com/retorquere/indexeddb-promise/issues",
+    "email": "emiliano.heyns@iris-advies.com"
   },
-  "browser": "indexeddb.js",
-  "types": "./.d.js",
+  "browser": "dist/indexeddb.js",
+  "files": [ "dist/*" ],
   "scripts": {},
   "author": {
     "name": "Stephen Paul Hassall",
@@ -23,7 +23,8 @@
     "promise",
     "promises",
     "indexeddb",
-    "database"
+    "database",
+    "typescript"
   ],
   "license": "MIT",
   "devDependencies": {
