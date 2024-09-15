@@ -3,13 +3,18 @@
  * Wrapper of the IDBCursor IndexedDB API object.
  */
 
+export type Direction = 'next' | 'nextunique' | 'prev' | 'prevunique'
+
 export class Cursor {
+    protected _iDbCursor: IDBCursor
+    protected _iDbRequest: IDBRequest
+
     /**
      * Cursor constructor.
      * @param {IDBCursor} iDbCursor The cursor interface object.
      * @param {IDBRequest} iDbRequest The request interface object used to open the cursor with.
      */
-    constructor(iDbCursor, iDbRequest) {
+    constructor(iDbCursor: IDBCursor, iDbRequest: IDBRequest) {
         // Set cursor interface object
         this._iDbCursor = iDbCursor;
 
@@ -79,9 +84,9 @@ export class Cursor {
      * @param {Number} count The number of records to advance by.
      * @return {Promise<Boolean>} A promise that resolves to either true (found) or false (end of cursor).
      */
-    advance(count) {
+    advance(count: number): Promise<boolean> {
         // Create promise
-        const promise = new Promise((resolve, reject) => {
+        const promise: Promise<boolean> = new Promise((resolve, reject) => {
             // Handle on error event
             this._iDbRequest.onerror = () => {
                 // Reject the promise with the error
@@ -115,9 +120,9 @@ export class Cursor {
      * @param {*} [key] The key use to find the next record.
      * @return {Promise<Boolean>} A promise that resolves to either true (found) or false (end of cursor).
      */
-    continue(key) {
+    continue(key: IDBValidKey): Promise<boolean> {
         // Create promise
-        const promise = new Promise((resolve, reject) => {
+        const promise: Promise<boolean> = new Promise((resolve, reject) => {
             // Handle on error event
             this._iDbRequest.onerror = () => {
                 // Reject the promise with the error
@@ -152,7 +157,7 @@ export class Cursor {
      * @param {*} primaryKey The primary key to look with.
      * @return {Promise<Boolean>} A promise that resolves to either true (found) or false (end of cursor).
      */
-    continuePrimaryKey(key, primaryKey) {
+    continuePrimaryKey(key: IDBValidKey, primaryKey: IDBValidKey) {
         // Create promise
         const promise = new Promise((resolve, reject) => {
             // Handle on error event

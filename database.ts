@@ -8,12 +8,16 @@ import { ObjectStore } from "./object-store.js";
 import { Transaction } from "./transaction.js";
 
 export class Database {
+    private _iDbDatabase?: IDBDatabase
+    private _version: number
+    private _name: string
+
     /**
      * Base database constructor.
      * @param {String} name The name of the database.
      * @param {Number} version An integer version number of the database.
      */
-    constructor(name, version) {
+    constructor(name: string, version: number) {
         // Set members
         this._name = name;
         this._version = version;
@@ -35,9 +39,9 @@ export class Database {
      * Get the current database version.
      * @return {Number} The version integer value.
      */
-    get version() {
+    get version(): number {
         // Return the version value
-        return this._iDbDatabase.version;
+        return this._iDbDatabase!.version;
     }
 
     /**
@@ -46,7 +50,7 @@ export class Database {
      */
     get name() {
         // Return the name value
-        return this._iDbDatabase.name;
+        return this._iDbDatabase!.name;
     }
 
     /**
@@ -55,7 +59,7 @@ export class Database {
      */
     get objectStoreNames() {
         // Return the object store names
-        return this._iDbDatabase.objectStoreNames;
+        return this._iDbDatabase!.objectStoreNames;
     }
 
     /**
@@ -66,21 +70,21 @@ export class Database {
      * **WARNING:** Must be used with `async/await`.
      * @return {Promise} A promise.
      */
-    open() {
+    open(): Promise<void> {
         // If already open
         if (this._iDbDatabase) throw new Error('Already open');
 
         // Create promise
-        const promise = new Promise((resolve, reject) => {
+        const promise: Promise<void> = new Promise((resolve, reject) => {
             // Set open the request object
             let openDbRequest = undefined;
 
             // Set upgraded error
-            let upgradedError = undefined;
+            let upgradedError: Error;
 
             try {
                 // Open the database
-                openDbRequest = window.indexedDB.open(this._name, this._version);
+                openDbRequest = indexedDB.open(this._name, this._version);
             } catch (error) {
                 // Reject with the error and stop
                 reject(error);
@@ -121,16 +125,16 @@ export class Database {
             };
 
             // Handle on upgrade needed event
-            openDbRequest.onupgradeneeded = (event) => {
+            openDbRequest.onupgradeneeded = (event: IDBVersionChangeEvent) => {
                 // Set the database interface
-                this._iDbDatabase = event.target.result;
+                this._iDbDatabase = (event.target as IDBOpenDBRequest).result;
 
                 // Create transaction object
-                const transaction = new Transaction(openDbRequest.transaction);
+                const transaction = openDbRequest.transaction ? new Transaction(openDbRequest.transaction) : openDbRequest.transaction;
 
                 try {
                     // Call the on upgrade needed override (this is either done with async or not)
-                    const upgradePromise = this._upgrade(transaction, event.oldVersion, event.newVersion);
+                    const upgradePromise = this._upgrade(transaction!, event.oldVersion, event.newVersion);
 
                     // If the upgrade function returned a promise
                     if (upgradePromise instanceof Promise) {
@@ -144,16 +148,16 @@ export class Database {
                                 upgradedError = error;
 
                                 // Manually abort the upgrade transaction (this forces the upgrade to stop)
-                                openDbRequest.transaction.abort();
+                                openDbRequest.transaction!.abort();
                             }
                         );
                     }
                 } catch (error) {
                     // Set the upgrade error
-                    upgradedError = error;
+                    upgradedError = error as Error;
 
                     // Manually abort the upgrade transaction (this forces the upgrade to stop)
-                    openDbRequest.transaction.abort();
+                    openDbRequest.transaction!.abort();
                 }
             };
 
@@ -173,7 +177,7 @@ export class Database {
      */
     close() {
         // Close the database
-        this._iDbDatabase.close();
+        this._iDbDatabase!.close();
 
         // Clear interface value
         this._iDbDatabase = undefined;
@@ -188,9 +192,9 @@ export class Database {
      * @param {Boolean} [options.autoIncrement=false] Will the key be automatically increased for each new record.
      * @return {ObjectStore} A ObjectStore object linked to the new object store in the database.
      */
-    createObjectStore(name, options) {
+    createObjectStore(name: string, options?: IDBObjectStoreParameters): ObjectStore {
         // Create new object store
-        const iDbObjectStore = this._iDbDatabase.createObjectStore(name, options);
+        const iDbObjectStore = this._iDbDatabase!.createObjectStore(name, options);
 
         // Create and return an ObjectStore object
         return new ObjectStore(iDbObjectStore);
@@ -200,9 +204,9 @@ export class Database {
      * Delete an object store with the given name.
      * @param {String} name The name of the object store.
      */
-    deleteObjectStore(name) {
+    deleteObjectStore(name: string): void {
         // Delete the object store
-        this._iDbDatabase.deleteObjectStore(name);
+        this._iDbDatabase!.deleteObjectStore(name);
     }
 
     /**
@@ -216,9 +220,9 @@ export class Database {
      * @param {String} [options.durability] Either "strict", "relaxed" or "default".
      * @return {Transaction} A transaction object.
      */
-    transaction(storeNames, mode, options) {
+    transaction(storeNames: string | string[], mode?: 'readonly' | 'readwrite', options?: { durability?: 'strict' | 'relaxed' | 'default' }): Transaction {
         // Create transaction
-        const iDbTransaction = this._iDbDatabase.transaction(storeNames, mode, options);
+        const iDbTransaction = this._iDbDatabase!.transaction(storeNames, mode, options);
 
         // Create and return a Transaction object
         return new Transaction(iDbTransaction);
@@ -236,7 +240,7 @@ export class Database {
      * @return {Promise|undefined} You can return a promise (by using an async function), or return nothing.
      * @override
      */
-    _upgrade(transaction, oldVersion, newVersion) {
+    _upgrade(transaction: Transaction, oldVersion: number, newVersion: number | null): Promise<void> {
         // Must never get here
         throw new Error('Database._upgrade is not overridden');
     }

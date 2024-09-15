@@ -2,16 +2,18 @@
  * Indexed DB promise object store.
  * Wrapper of the IDBObjectStore IndexedDB API object.
  */
-import { Cursor } from "./cursor.js";
+import { Cursor, Direction } from "./cursor.js";
 import { CursorWithValue } from "./cursor-with-value.js";
 import { Index } from "./index.js";
 
 export class ObjectStore {
+    private _iDbObjectStore: IDBObjectStore
+
     /**
      * Object store constructor.
      * @param {IDBObjectStore} iDbObjectStore The object store interface object.
      */
-    constructor(iDbObjectStore) {
+    constructor(iDbObjectStore: IDBObjectStore) {
         // Set object store interface object
         this._iDbObjectStore = iDbObjectStore;
     }
@@ -29,7 +31,7 @@ export class ObjectStore {
      * Gets the auto increment value that was used when creating the object store.
      * @return {Boolean} The auto increment value.
      */
-    get autoIncrement() {
+    get autoIncrement(): boolean {
         // Return the auto increment value
         return this._iDbObjectStore.autoIncrement;
     }
@@ -47,7 +49,7 @@ export class ObjectStore {
      * Gets the key path value that was used when creating the object store.
      * @return {String} The key path value.
      */
-    get keyPath() {
+    get keyPath(): string | string[] {
         // Return the key path value
         return this._iDbObjectStore.keyPath;
     }
@@ -79,11 +81,11 @@ export class ObjectStore {
      * @param {*} [key] If the object store has no key path then this key will be used.
      * @return {Promise<*>} A promise that resolves with the key value.
      */
-    add(value, key) {
+    add(value: any, key?: IDBValidKey): Promise<IDBValidKey> {
         // Create promise
-        const promise = new Promise((resolve, reject) => {
+        const promise: Promise<IDBValidKey> = new Promise((resolve, reject) => {
             // Add value to the object store
-            const request = this._iDbObjectStore.add(value, key);
+            const request = typeof key === 'undefined' || key === null ? this._iDbObjectStore.add(value) : this._iDbObjectStore.add(value, key);
 
             // Handle on error event
             request.onerror = () => {
@@ -94,7 +96,7 @@ export class ObjectStore {
             // Handle on success event
             request.onsuccess = () => {
                 // Resolve the promise with the key value
-                resolve(request.result);
+                resolve(request.result as IDBValidKey);
             };
         });
 
@@ -108,9 +110,9 @@ export class ObjectStore {
      * **WARNING:** Must be used with `async/await`.
      * @return {Promise} A promise.
      */
-    clear() {
+    clear(): Promise<void> {
         // Create promise
-        const promise = new Promise((resolve, reject) => {
+        const promise: Promise<void> = new Promise((resolve, reject) => {
             // Clear the object store
             const request = this._iDbObjectStore.clear();
 
@@ -139,9 +141,9 @@ export class ObjectStore {
      * are courted.
      * @return {Promise<Number>} A promise that resolves with the count value.
      */
-    count(query) {
+    count(query: IDBKeyRange): Promise<number> {
         // Create promise
-        const promise = new Promise((resolve, reject) => {
+        const promise: Promise<number> = new Promise((resolve, reject) => {
             // Count the number of objects in store
             const request = this._iDbObjectStore.count(query);
 
@@ -154,7 +156,7 @@ export class ObjectStore {
             // Handle on success event
             request.onsuccess = () => {
                 // Resolve the promise with the count value
-                resolve(request.result);
+                resolve(request.result as number);
             };
         });
 
@@ -171,7 +173,7 @@ export class ObjectStore {
      * @param {Boolean} [options.multiEntry] If true the index will add an index for each array element.
      * @return {Index} The created index object.
      */
-    createIndex(indexName, keyPath, options) {
+    createIndex(indexName: string, keyPath: string | string[], options?: { unique?: boolean, multiEntry?: boolean }): Index {
         // Create index interface object
         const iDbIndex = this._iDbObjectStore.createIndex(indexName, keyPath, options);
 
@@ -186,9 +188,9 @@ export class ObjectStore {
      * @param {*|IDBKeyRange} key Either a key value or a key range object.
      * @return {Promise} A promise.
      */
-    delete(key) {
+    delete(key: IDBValidKey | IDBKeyRange): Promise<void> {
         // Create promise
-        const promise = new Promise((resolve, reject) => {
+        const promise: Promise<void> = new Promise((resolve, reject) => {
             // Delete the objects from the object store
             const request = this._iDbObjectStore.delete(key);
 
@@ -213,7 +215,7 @@ export class ObjectStore {
      * Delete an index from the object store. This can only be called within the upgrade process.
      * @param {String} indexName The name of the index to delete.
      */
-    deleteIndex(indexName) {
+    deleteIndex(indexName: string): void {
         // Delete the index from the object store
         this._iDbObjectStore.deleteIndex(indexName);
     }
@@ -226,9 +228,9 @@ export class ObjectStore {
      * @param {*|IDBKeyRange} key Either a key value or a key range object.
      * @return {Promise<*>} A promise that resolves the first object found.
      */
-    get(key) {
+    get(key: IDBValidKey | IDBKeyRange): Promise<any> {
         // Create promise
-        const promise = new Promise((resolve, reject) => {
+        const promise: Promise<any> = new Promise((resolve, reject) => {
             // Get the object using the key
             const request = this._iDbObjectStore.get(key);
 
@@ -257,9 +259,9 @@ export class ObjectStore {
      * @param {Number} [count] The maximum number of objects that can be returned.
      * @return {Promise<*[]} A promise that resolves with a list of found objects.
      */
-    getAll(query, count) {
+    getAll(query: IDBValidKey | IDBKeyRange, count?: number): Promise<any[]> {
         // Create promise
-        const promise = new Promise((resolve, reject) => {
+        const promise: Promise<any[]> = new Promise((resolve, reject) => {
             // Get all the objects from the object store
             const request = this._iDbObjectStore.getAll(query, count);
 
@@ -272,7 +274,7 @@ export class ObjectStore {
             // Handle on success event
             request.onsuccess = () => {
                 // Resolve the promise with the object list
-                resolve(request.result);
+                resolve(request.result as any[]);
             };
         });
 
@@ -288,9 +290,9 @@ export class ObjectStore {
      * @param {Number} [count] The maximum number of keys that can be returned.
      * @return {Promise<*[]>} A promise that resolves with a list of found keys.
      */
-    getAllKeys(query, count) {
+    getAllKeys(query: IDBValidKey | IDBKeyRange, count?: number): Promise<IDBValidKey[]> {
         // Create promise
-        const promise = new Promise((resolve, reject) => {
+        const promise: Promise<IDBValidKey[]> = new Promise((resolve, reject) => {
             // Get all the keys from the object store
             const request = this._iDbObjectStore.getAllKeys(query, count);
 
@@ -303,7 +305,7 @@ export class ObjectStore {
             // Handle on success event
             request.onsuccess = () => {
                 // Resolve the promise with the list of keys
-                resolve(request.result);
+                resolve(request.result as IDBValidKey[]);
             };
         });
 
@@ -319,9 +321,9 @@ export class ObjectStore {
      * @param {*|IDBKeyRange} [key] Either a key value or a key range object.
      * @return {Promise<*>} A promise that resolves with the first key found.
      */
-    getKey(key) {
+    getKey(key: IDBValidKey | IDBKeyRange): Promise<IDBValidKey> {
         // Create promise
-        const promise = new Promise((resolve, reject) => {
+        const promise: Promise<IDBValidKey> = new Promise((resolve, reject) => {
             // Get the key form the object store
             const request = this._iDbObjectStore.getKey(key);
 
@@ -334,7 +336,7 @@ export class ObjectStore {
             // Handle on success event
             request.onsuccess = () => {
                 // Resolve the promise with the key value
-                resolve(request.result);
+                resolve(request.result as IDBValidKey);
             };
         });
 
@@ -347,7 +349,7 @@ export class ObjectStore {
      * @param {String} name The name of the index.
      * @return {Index} The index object.
      */
-    index(name) {
+    index(name: string): Index {
         // Get index interface object
         const iDbIndex = this._iDbObjectStore.index(name);
 
@@ -365,9 +367,9 @@ export class ObjectStore {
      * @return {Promise<CursorWithValue|undefined>} A promise that resolves with either the cursor with value object or undefined
      * if nothing was found.
      */
-    openCursor(query, direction) {
+    openCursor(query?: IDBKeyRange, direction?: Direction): Promise<CursorWithValue|void> {
         // Create promise
-        const promise = new Promise((resolve, reject) => {
+        const promise: Promise<CursorWithValue|void> = new Promise((resolve, reject) => {
             // Open the cursor
             const request = this._iDbObjectStore.openCursor(query, direction);
 
@@ -404,9 +406,9 @@ export class ObjectStore {
      * @return {Promise<Cursor|undefined>} A promise that resolves with either the cursor object (with keys, but no values) or undefined
      * if nothing was found.
      */
-    openKeyCursor(query, direction) {
+    openKeyCursor(query?: IDBKeyRange, direction?: Direction): Promise<Cursor|void> {
         // Create promise
-        const promise = new Promise((resolve, reject) => {
+        const promise: Promise<Cursor|void> = new Promise((resolve, reject) => {
             // Open the cursor
             const request = this._iDbObjectStore.openKeyCursor(query, direction);
 
@@ -442,9 +444,9 @@ export class ObjectStore {
      * @param {*} [key] If the object store has no key path then this key will be used.
      * @return {Promise<*>} A promise that resolves with the key value.
      */
-    put(value, key) {
+    put(value: any, key: IDBValidKey): Promise<IDBValidKey> {
         // Create promise
-        const promise = new Promise((resolve, reject) => {
+        const promise: Promise<IDBValidKey> = new Promise((resolve, reject) => {
             // Put the value into the object store
             const request = this._iDbObjectStore.put(value, key);
 
@@ -457,7 +459,7 @@ export class ObjectStore {
             // Handle the on success event
             request.onsuccess = () => {
                 // Resolve the promise with the key value
-                resolve(request.result);
+                resolve(request.result as IDBValidKey);
             };
         });
 

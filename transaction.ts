@@ -5,11 +5,13 @@
 import { ObjectStore } from "./object-store.js";
 
 export class Transaction {
+    private _iDbTransaction: IDBTransaction
+
     /**
      * Transaction constructor.
      * @param {IDBTransaction} iDbTransaction The transaction interface object.
      */
-    constructor(iDbTransaction) {
+    constructor(iDbTransaction: IDBTransaction) {
         // Set transaction interface object
         this._iDbTransaction = iDbTransaction;
     }
@@ -89,7 +91,7 @@ export class Transaction {
             // Handle on abort event
             this._iDbTransaction.onabort = () => {
                 // Resolve the promise
-                resolve();
+                resolve(null);
             }
         });
 
@@ -121,7 +123,7 @@ export class Transaction {
             // Handle on compete
             this._iDbTransaction.oncomplete = () => {
                 // Resolve the promise
-                resolve();
+                resolve(null);
             };
         });
 
@@ -135,7 +137,7 @@ export class Transaction {
      * @param {String} name The name of the object store.
      * @return {ObjectStore} An object store object.
      */
-    objectStore(name) {
+    objectStore(name: string): ObjectStore {
         // Get the object store interface object
         const iDbObjectStore = this._iDbTransaction.objectStore(name);
 

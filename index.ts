@@ -2,15 +2,17 @@
  * Indexed DB promise index.
  * Wrapper of the IDBIndex IndexedDB API object.
  */
-import { Cursor } from "./cursor.js";
+import { Cursor, Direction } from "./cursor.js";
 import { CursorWithValue } from "./cursor-with-value.js";
 
 export class Index {
+    private _iDbIndex: IDBIndex
+
     /**
      * Index constructor.
      * @param {IDBIndex} iDbIndex The index interface object.
      */
-    constructor(iDbIndex) {
+    constructor(iDbIndex: IDBIndex) {
         // Set index interface object
         this._iDbIndex = iDbIndex;
     }
@@ -76,9 +78,9 @@ export class Index {
      * are courted.
      * @return {Promise<Number>} A promise that resolves with the count value.
      */
-    count(key) {
+    count(key: IDBValidKey | IDBKeyRange): Promise<number> {
         // Create promise
-        const promise = new Promise((resolve, reject) => {
+        const promise: Promise<number> = new Promise((resolve, reject) => {
             // Count the number of objects with index
             const request = this._iDbIndex.count(key);
 
@@ -91,7 +93,7 @@ export class Index {
             // Handle on success event
             request.onsuccess = () => {
                 // Resolve the promise with the count value
-                resolve(request.result);
+                resolve(request.result as number);
             };
         });
 
@@ -107,9 +109,9 @@ export class Index {
      * @param {*|IDBKeyRange} [key] Either a key value or a key range object.
      * @return {Promise<*>} A promise that resolves the first object found.
      */
-    get(key) {
+    get(key: IDBValidKey | IDBKeyRange): Promise<any> {
         // Create promise
-        const promise = new Promise((resolve, reject) => {
+        const promise: Promise<any> = new Promise((resolve, reject) => {
             // Get the object using the key
             const request = this._iDbIndex.get(key);
 
@@ -122,7 +124,7 @@ export class Index {
             // Handle on success event
             request.onsuccess = () => {
                 // Resolve the promise with the first found object
-                resolve(request.result);
+                resolve(request.result as any);
             };
         });
 
@@ -138,9 +140,9 @@ export class Index {
      * @param {Number} [count] The maximum number of objects that can be returned.
      * @return {Promise<*[]} A promise that resolves with a list of found objects.
      */
-    getAll(query, count) {
+    getAll(query: IDBValidKey | IDBKeyRange, count?: number): Promise<any> {
         // Create promise
-        const promise = new Promise((resolve, reject) => {
+        const promise: Promise<any> = new Promise((resolve, reject) => {
             // Get all the objects with the index
             const request = this._iDbIndex.getAll(query, count);
 
@@ -153,7 +155,7 @@ export class Index {
             // Handle on success event
             request.onsuccess = () => {
                 // Resolve the promise with the object list
-                resolve(request.result);
+                resolve(request.result as any);
             };
         });
 
@@ -169,9 +171,9 @@ export class Index {
      * @param {Number} [count] The maximum number of keys that can be returned.
      * @return {Promise<*[]>} A promise that resolves with a list of found keys.
      */
-    getAllKeys(query, count) {
+    getAllKeys(query: IDBValidKey | IDBKeyRange, count?: number): Promise<IDBValidKey[]> {
         // Create promise
-        const promise = new Promise((resolve, reject) => {
+        const promise: Promise<IDBValidKey[]> = new Promise((resolve, reject) => {
             // Get all the keys with the index
             const request = this._iDbIndex.getAllKeys(query, count);
 
@@ -184,7 +186,7 @@ export class Index {
             // Handle on success event
             request.onsuccess = () => {
                 // Resolve the promise with the list of keys
-                resolve(request.result);
+                resolve(request.result as IDBValidKey[]);
             };
         });
 
@@ -200,9 +202,9 @@ export class Index {
      * @param {*|IDBKeyRange} [key] Either a key value or a key range object.
      * @return {Promise<*>} A promise that resolves with the first key found.
      */
-    getKey(key) {
+    getKey(key: IDBValidKey | IDBKeyRange): Promise<IDBValidKey> {
         // Create promise
-        const promise = new Promise((resolve, reject) => {
+        const promise: Promise<IDBValidKey> = new Promise((resolve, reject) => {
             // Get the key form with index
             const request = this._iDbIndex.getKey(key);
 
@@ -215,7 +217,7 @@ export class Index {
             // Handle on success event
             request.onsuccess = () => {
                 // Resolve the promise with the key value
-                resolve(request.result);
+                resolve(request.result as IDBValidKey);
             };
         });
 
@@ -233,9 +235,9 @@ export class Index {
      * @return {Promise<CursorWithValue|undefined>} A promise that resolves with either the cursor with value object or undefined
      * if nothing was found.
      */
-    openCursor(range, direction) {
+    openCursor(range: IDBValidKey | IDBKeyRange, direction?: Direction): Promise<CursorWithValue|void> {
         // Create promise
-        const promise = new Promise((resolve, reject) => {
+        const promise: Promise<CursorWithValue|void> = new Promise((resolve, reject) => {
             // Open the cursor
             const request = this._iDbIndex.openCursor(range, direction);
 
@@ -272,9 +274,9 @@ export class Index {
      * @return {Promise<Cursor|undefined>} A promise that resolves with either the cursor object (with keys, but no values) or undefined
      * if nothing was found.
      */
-    openKeyCursor(range, direction) {
+    openKeyCursor(range: IDBValidKey | IDBKeyRange, direction?: Direction): Promise<Cursor|void> {
         // Create promise
-        const promise = new Promise((resolve, reject) => {
+        const promise: Promise<Cursor|void> = new Promise((resolve, reject) => {
             // Open the cursor
             const request = this._iDbIndex.openKeyCursor(range, direction);
 

@@ -5,12 +5,14 @@
 import { Cursor } from "./cursor.js";
 
 export class CursorWithValue extends Cursor {
+    private _iDbCursorWithValue: IDBCursorWithValue
+
     /**
      * Cursor with value constructor.
      * @param {IDBCursorWithValue} iDbCursorWithValue The cursor with value interface object.
      * @param {IDBRequest} iDbRequest The request interface object used to open the cursor with.
      */
-    constructor(iDbCursorWithValue, iDbRequest) {
+    constructor(iDbCursorWithValue: IDBCursorWithValue, iDbRequest: IDBRequest) {
         // Call super
         super(iDbCursorWithValue, iDbRequest);
 
@@ -42,9 +44,9 @@ export class CursorWithValue extends Cursor {
      * **WARNING:** Must be used with `async/await`.
      * @return {Promise} A promise.
      */
-    delete() {
+    delete(): Promise<void> {
         // Create promise
-        const promise = new Promise((resolve, reject) => {
+        const promise: Promise<void> = new Promise((resolve, reject) => {
             // Delete the current record/object
             const request = this._iDbCursorWithValue.delete();
 
@@ -72,9 +74,9 @@ export class CursorWithValue extends Cursor {
      * @param {*} value The new object to update with.
      * @return {Promise<*>} A promise that resolves with the new key value.
      */
-    update(value) {
+    update(value: any): Promise<IDBValidKey> {
         // Create promise
-        const promise = new Promise((resolve, reject) => {
+        const promise: Promise<IDBValidKey> = new Promise((resolve, reject) => {
             // Update the current record with the new value
             const request = this._iDbCursor.update(value);
 

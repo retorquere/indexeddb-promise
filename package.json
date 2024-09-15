@@ -12,8 +12,7 @@
   },
   "browser": "indexeddb.js",
   "types": "./.d.js",
-  "scripts": {
-  },
+  "scripts": {},
   "author": {
     "name": "Stephen Paul Hassall",
     "email": "StephenPaulHassall@hotmail.com",
@@ -26,5 +25,8 @@
     "indexeddb",
     "database"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.6.2"
+  }
 }

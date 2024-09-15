@@ -1,6 +1,6 @@
 /**
  * Indexed DB promise fractory.
- * Wrapper of the IDBFactory IndexedDB API object. This uses the window.indexedDB object.
+ * Wrapper of the IDBFactory IndexedDB API object. This uses the indexedDB object.
  * 
  * The Factory.open function is found in the Database.open function.
  */
@@ -12,7 +12,7 @@ export class Factory {
      */
     static databases() {
         // Get and return a promise to get the list of databases
-        return window.indexedDB.databases();
+        return indexedDB.databases();
     }
 
     /**
@@ -23,11 +23,11 @@ export class Factory {
      * @param {Object} [options] Extra options if required.
      * @return {Promise} A promise.
      */
-    static deleteDatabase(name, options) {
+    static deleteDatabase(name: string): Promise<void> {
         // Create promise
-        const promise = new Promise((resolve, reject) => {
+        const promise: Promise<void> = new Promise((resolve, reject) => {
             // Delete the database
-            const openDbRequest = window.indexedDB.deleteDatabase(name, options);
+            const openDbRequest = indexedDB.deleteDatabase(name);
 
             // Handle on error event
             openDbRequest.onerror = () => {
