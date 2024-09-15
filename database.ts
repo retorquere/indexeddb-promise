@@ -162,9 +162,15 @@ export class Database {
             };
 
             // Handle on blocked event
-            openDbRequest.onblocked = () => {
-                // Reject the promise with the error
-                reject(openDbRequest.error);
+            openDbRequest.onblocked = (event: IDBVersionChangeEvent) => {
+                const idbDatabase = (event.target as IDBOpenDBRequest).result;
+                const { oldVersion, newVersion } = event
+                try {
+                  this._blocked(idbDatabase, oldVersion, newVersion, openDbRequest.error)
+                }
+                catch (err) {
+                  reject(err)
+                }
             }
         });
 
@@ -243,6 +249,19 @@ export class Database {
     _upgrade(transaction: Transaction, oldVersion: number, newVersion: number | null): Promise<void> {
         // Must never get here
         throw new Error('Database._upgrade is not overridden');
+    }
+
+    /**
+     * Override function that is called when the database is being deleted and there is an old version
+     * which needs to be closed. Replace this function to update all the parts required. It can
+     * be an async function or not. You must not use await on any non-indexedDb asynchronous functions.
+     * while performing any upgrade steps.
+     * @param {Number} oldVersion The current version of the database that needs upgrading.
+     * @param {Number} newVersion The new version the database is upgrading to.
+     * @override
+     */
+    _blocked(_idbDatabase: IDBDatabase, _oldVersion: number, _newVersion: number | null, error: DOMException | null): void {
+        if (error) throw error
     }
 
     /**
