@@ -1,3 +1,4 @@
+declare const dump: (msg: string) => void
 /**
  * Indexed DB promise transaction.
  * Wrapper of the IDBTransaction IndexedDB API object.
@@ -109,6 +110,7 @@ export class Transaction {
      * @return {Promise} A promise.
      */
     commit() {
+        if (!this._iDbTransaction.commit) return // older Zotero versions don't have this
         // Create promise
         const promise = new Promise((resolve, reject) => {
             // Commit the transaction
