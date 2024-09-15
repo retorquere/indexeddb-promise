@@ -1,6 +1,6 @@
 {
   "name": "@retorquere/indexeddb-promise",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "type": "module",
   "description": "Use IndexedDB with promises + typescript typings",
   "repository": "github:retorquere/indexeddb-promise",
