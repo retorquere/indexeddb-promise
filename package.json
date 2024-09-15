@@ -1,7 +1,7 @@
 {
   "name": "@retorquere/indexeddb-promise",
   "type": "module",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Use IndexedDB with promises + typescript typings",
   "repository": "github:retorquere/indexeddb-promise",
   "funding": "https://github.com/StephenHassall/indexeddb-promise?sponsor=1",
@@ -11,8 +11,12 @@
     "email": "emiliano.heyns@iris-advies.com"
   },
   "browser": "dist/indexeddb.js",
-  "files": [ "dist/*" ],
-  "scripts": {"test": "tsc"},
+  "files": [
+    "dist/*"
+  ],
+  "scripts": {
+    "test": "tsc"
+  },
   "author": {
     "name": "Stephen Paul Hassall",
     "email": "StephenPaulHassall@hotmail.com",
