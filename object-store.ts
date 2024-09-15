@@ -141,7 +141,7 @@ export class ObjectStore {
      * are courted.
      * @return {Promise<Number>} A promise that resolves with the count value.
      */
-    count(query: IDBKeyRange): Promise<number> {
+    count(query?: IDBKeyRange): Promise<number> {
         // Create promise
         const promise: Promise<number> = new Promise((resolve, reject) => {
             // Count the number of objects in store
@@ -259,7 +259,7 @@ export class ObjectStore {
      * @param {Number} [count] The maximum number of objects that can be returned.
      * @return {Promise<*[]} A promise that resolves with a list of found objects.
      */
-    getAll(query: IDBValidKey | IDBKeyRange, count?: number): Promise<any[]> {
+    getAll(query?: IDBValidKey | IDBKeyRange, count?: number): Promise<any[]> {
         // Create promise
         const promise: Promise<any[]> = new Promise((resolve, reject) => {
             // Get all the objects from the object store
@@ -290,7 +290,7 @@ export class ObjectStore {
      * @param {Number} [count] The maximum number of keys that can be returned.
      * @return {Promise<*[]>} A promise that resolves with a list of found keys.
      */
-    getAllKeys(query: IDBValidKey | IDBKeyRange, count?: number): Promise<IDBValidKey[]> {
+    getAllKeys(query?: IDBValidKey | IDBKeyRange, count?: number): Promise<IDBValidKey[]> {
         // Create promise
         const promise: Promise<IDBValidKey[]> = new Promise((resolve, reject) => {
             // Get all the keys from the object store
@@ -444,7 +444,7 @@ export class ObjectStore {
      * @param {*} [key] If the object store has no key path then this key will be used.
      * @return {Promise<*>} A promise that resolves with the key value.
      */
-    put(value: any, key: IDBValidKey): Promise<IDBValidKey> {
+    put(value: any, key?: IDBValidKey): Promise<IDBValidKey> {
         // Create promise
         const promise: Promise<IDBValidKey> = new Promise((resolve, reject) => {
             // Put the value into the object store

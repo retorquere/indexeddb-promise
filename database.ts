@@ -8,9 +8,9 @@ import { ObjectStore } from "./object-store.js";
 import { Transaction } from "./transaction.js";
 
 export class Database {
-    private _iDbDatabase?: IDBDatabase
-    private _version: number
-    private _name: string
+    protected _iDbDatabase?: IDBDatabase
+    protected _version: number
+    protected _name: string
 
     /**
      * Base database constructor.
@@ -57,9 +57,9 @@ export class Database {
      * Get the list of object store names. Use the .item(index) to get the name value.
      * @return {DOMStringList} The list of object store names.
      */
-    get objectStoreNames() {
+    get objectStoreNames(): string[] {
         // Return the object store names
-        return this._iDbDatabase!.objectStoreNames;
+        return [...this._iDbDatabase!.objectStoreNames];
     }
 
     /**
@@ -246,7 +246,7 @@ export class Database {
      * @return {Promise|undefined} You can return a promise (by using an async function), or return nothing.
      * @override
      */
-    _upgrade(transaction: Transaction, oldVersion: number, newVersion: number | null): Promise<void> {
+    _upgrade(transaction: Transaction, oldVersion: number, newVersion: number | null): void | Promise<void> {
         // Must never get here
         throw new Error('Database._upgrade is not overridden');
     }
