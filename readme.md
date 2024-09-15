@@ -9,7 +9,7 @@ You can find tests and example code on the GitHub repository that will help you 
 ## Installation
 
 ```
-npm install @coderundebug/indexeddb-promise
+npm install @retorquere/indexeddb-promise
 ```
 
 ## Contents
