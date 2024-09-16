@@ -2,6 +2,7 @@
  * Indexed DB promise index.
  * Wrapper of the IDBIndex IndexedDB API object.
  */
+import { SynchronousPromise } from 'synchronous-promise'
 import { Cursor, Direction } from "./cursor.js";
 import { CursorWithValue } from "./cursor-with-value.js";
 
@@ -80,7 +81,7 @@ export class Index {
      */
     count(key: IDBValidKey | IDBKeyRange): Promise<number> {
         // Create promise
-        const promise: Promise<number> = new Promise((resolve, reject) => {
+        const promise: Promise<number> = new SynchronousPromise((resolve, reject) => {
             // Count the number of objects with index
             const request = this._iDbIndex.count(key);
 
@@ -111,7 +112,7 @@ export class Index {
      */
     get(key: IDBValidKey | IDBKeyRange): Promise<any> {
         // Create promise
-        const promise: Promise<any> = new Promise((resolve, reject) => {
+        const promise: Promise<any> = new SynchronousPromise((resolve, reject) => {
             // Get the object using the key
             const request = this._iDbIndex.get(key);
 
@@ -142,7 +143,7 @@ export class Index {
      */
     getAll(query: IDBValidKey | IDBKeyRange, count?: number): Promise<any> {
         // Create promise
-        const promise: Promise<any> = new Promise((resolve, reject) => {
+        const promise: Promise<any> = new SynchronousPromise((resolve, reject) => {
             // Get all the objects with the index
             const request = this._iDbIndex.getAll(query, count);
 
@@ -173,7 +174,7 @@ export class Index {
      */
     getAllKeys(query: IDBValidKey | IDBKeyRange, count?: number): Promise<IDBValidKey[]> {
         // Create promise
-        const promise: Promise<IDBValidKey[]> = new Promise((resolve, reject) => {
+        const promise: Promise<IDBValidKey[]> = new SynchronousPromise((resolve, reject) => {
             // Get all the keys with the index
             const request = this._iDbIndex.getAllKeys(query, count);
 
@@ -204,7 +205,7 @@ export class Index {
      */
     getKey(key: IDBValidKey | IDBKeyRange): Promise<IDBValidKey> {
         // Create promise
-        const promise: Promise<IDBValidKey> = new Promise((resolve, reject) => {
+        const promise: Promise<IDBValidKey> = new SynchronousPromise((resolve, reject) => {
             // Get the key form with index
             const request = this._iDbIndex.getKey(key);
 
@@ -237,7 +238,7 @@ export class Index {
      */
     openCursor(range: IDBValidKey | IDBKeyRange, direction?: Direction): Promise<CursorWithValue|void> {
         // Create promise
-        const promise: Promise<CursorWithValue|void> = new Promise((resolve, reject) => {
+        const promise: Promise<CursorWithValue|void> = new SynchronousPromise((resolve, reject) => {
             // Open the cursor
             const request = this._iDbIndex.openCursor(range, direction);
 
@@ -276,7 +277,7 @@ export class Index {
      */
     openKeyCursor(range: IDBValidKey | IDBKeyRange, direction?: Direction): Promise<Cursor|void> {
         // Create promise
-        const promise: Promise<Cursor|void> = new Promise((resolve, reject) => {
+        const promise: Promise<Cursor|void> = new SynchronousPromise((resolve, reject) => {
             // Open the cursor
             const request = this._iDbIndex.openKeyCursor(range, direction);
 

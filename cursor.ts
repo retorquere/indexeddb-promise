@@ -3,6 +3,7 @@
  * Wrapper of the IDBCursor IndexedDB API object.
  */
 
+import { SynchronousPromise } from 'synchronous-promise'
 export type Direction = 'next' | 'nextunique' | 'prev' | 'prevunique'
 
 export class Cursor {
@@ -86,7 +87,7 @@ export class Cursor {
      */
     advance(count: number): Promise<boolean> {
         // Create promise
-        const promise: Promise<boolean> = new Promise((resolve, reject) => {
+        const promise: Promise<boolean> = new SynchronousPromise((resolve, reject) => {
             // Handle on error event
             this._iDbRequest.onerror = () => {
                 // Reject the promise with the error
@@ -122,7 +123,7 @@ export class Cursor {
      */
     continue(key: IDBValidKey): Promise<boolean> {
         // Create promise
-        const promise: Promise<boolean> = new Promise((resolve, reject) => {
+        const promise: Promise<boolean> = new SynchronousPromise((resolve, reject) => {
             // Handle on error event
             this._iDbRequest.onerror = () => {
                 // Reject the promise with the error
@@ -159,7 +160,7 @@ export class Cursor {
      */
     continuePrimaryKey(key: IDBValidKey, primaryKey: IDBValidKey) {
         // Create promise
-        const promise = new Promise((resolve, reject) => {
+        const promise = new SynchronousPromise((resolve, reject) => {
             // Handle on error event
             this._iDbRequest.onerror = () => {
                 // Reject the promise with the error

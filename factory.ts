@@ -4,6 +4,7 @@
  * 
  * The Factory.open function is found in the Database.open function.
  */
+import { SynchronousPromise } from 'synchronous-promise'
 
 export class Factory {
     /**
@@ -25,7 +26,7 @@ export class Factory {
      */
     static deleteDatabase(name: string): Promise<void> {
         // Create promise
-        const promise: Promise<void> = new Promise((resolve, reject) => {
+        const promise: Promise<void> = new SynchronousPromise((resolve, reject) => {
             // Delete the database
             const openDbRequest = indexedDB.deleteDatabase(name);
 

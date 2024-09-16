@@ -2,6 +2,7 @@
  * Indexed DB promise object store.
  * Wrapper of the IDBObjectStore IndexedDB API object.
  */
+import { SynchronousPromise } from 'synchronous-promise'
 import { Cursor, Direction } from "./cursor.js";
 import { CursorWithValue } from "./cursor-with-value.js";
 import { Index } from "./index.js";
@@ -83,7 +84,7 @@ export class ObjectStore {
      */
     add(value: any, key?: IDBValidKey): Promise<IDBValidKey> {
         // Create promise
-        const promise: Promise<IDBValidKey> = new Promise((resolve, reject) => {
+        const promise: Promise<IDBValidKey> = new SynchronousPromise((resolve, reject) => {
             // Add value to the object store
             const request = typeof key === 'undefined' || key === null ? this._iDbObjectStore.add(value) : this._iDbObjectStore.add(value, key);
 
@@ -112,7 +113,7 @@ export class ObjectStore {
      */
     clear(): Promise<void> {
         // Create promise
-        const promise: Promise<void> = new Promise((resolve, reject) => {
+        const promise: Promise<void> = new SynchronousPromise((resolve, reject) => {
             // Clear the object store
             const request = this._iDbObjectStore.clear();
 
@@ -143,7 +144,7 @@ export class ObjectStore {
      */
     count(query?: IDBKeyRange): Promise<number> {
         // Create promise
-        const promise: Promise<number> = new Promise((resolve, reject) => {
+        const promise: Promise<number> = new SynchronousPromise((resolve, reject) => {
             // Count the number of objects in store
             const request = this._iDbObjectStore.count(query);
 
@@ -190,7 +191,7 @@ export class ObjectStore {
      */
     delete(key: IDBValidKey | IDBKeyRange): Promise<void> {
         // Create promise
-        const promise: Promise<void> = new Promise((resolve, reject) => {
+        const promise: Promise<void> = new SynchronousPromise((resolve, reject) => {
             // Delete the objects from the object store
             const request = this._iDbObjectStore.delete(key);
 
@@ -230,7 +231,7 @@ export class ObjectStore {
      */
     get(key: IDBValidKey | IDBKeyRange): Promise<any> {
         // Create promise
-        const promise: Promise<any> = new Promise((resolve, reject) => {
+        const promise: Promise<any> = new SynchronousPromise((resolve, reject) => {
             // Get the object using the key
             const request = this._iDbObjectStore.get(key);
 
@@ -261,7 +262,7 @@ export class ObjectStore {
      */
     getAll(query?: IDBValidKey | IDBKeyRange, count?: number): Promise<any[]> {
         // Create promise
-        const promise: Promise<any[]> = new Promise((resolve, reject) => {
+        const promise: Promise<any[]> = new SynchronousPromise((resolve, reject) => {
             // Get all the objects from the object store
             const request = this._iDbObjectStore.getAll(query, count);
 
@@ -292,7 +293,7 @@ export class ObjectStore {
      */
     getAllKeys(query?: IDBValidKey | IDBKeyRange, count?: number): Promise<IDBValidKey[]> {
         // Create promise
-        const promise: Promise<IDBValidKey[]> = new Promise((resolve, reject) => {
+        const promise: Promise<IDBValidKey[]> = new SynchronousPromise((resolve, reject) => {
             // Get all the keys from the object store
             const request = this._iDbObjectStore.getAllKeys(query, count);
 
@@ -323,7 +324,7 @@ export class ObjectStore {
      */
     getKey(key: IDBValidKey | IDBKeyRange): Promise<IDBValidKey> {
         // Create promise
-        const promise: Promise<IDBValidKey> = new Promise((resolve, reject) => {
+        const promise: Promise<IDBValidKey> = new SynchronousPromise((resolve, reject) => {
             // Get the key form the object store
             const request = this._iDbObjectStore.getKey(key);
 
@@ -369,7 +370,7 @@ export class ObjectStore {
      */
     openCursor(query?: IDBKeyRange, direction?: Direction): Promise<CursorWithValue|void> {
         // Create promise
-        const promise: Promise<CursorWithValue|void> = new Promise((resolve, reject) => {
+        const promise: Promise<CursorWithValue|void> = new SynchronousPromise((resolve, reject) => {
             // Open the cursor
             const request = this._iDbObjectStore.openCursor(query, direction);
 
@@ -408,7 +409,7 @@ export class ObjectStore {
      */
     openKeyCursor(query?: IDBKeyRange, direction?: Direction): Promise<Cursor|void> {
         // Create promise
-        const promise: Promise<Cursor|void> = new Promise((resolve, reject) => {
+        const promise: Promise<Cursor|void> = new SynchronousPromise((resolve, reject) => {
             // Open the cursor
             const request = this._iDbObjectStore.openKeyCursor(query, direction);
 
@@ -446,7 +447,7 @@ export class ObjectStore {
      */
     put(value: any, key?: IDBValidKey): Promise<IDBValidKey> {
         // Create promise
-        const promise: Promise<IDBValidKey> = new Promise((resolve, reject) => {
+        const promise: Promise<IDBValidKey> = new SynchronousPromise((resolve, reject) => {
             // Put the value into the object store
             const request = this._iDbObjectStore.put(value, key);
 

@@ -3,6 +3,7 @@ declare const dump: (msg: string) => void
  * Indexed DB promise transaction.
  * Wrapper of the IDBTransaction IndexedDB API object.
  */
+import { SynchronousPromise } from 'synchronous-promise'
 import { ObjectStore } from "./object-store.js";
 
 export class Transaction {
@@ -79,7 +80,7 @@ export class Transaction {
      */
     abort() {
         // Create promise
-        const promise = new Promise((resolve, reject) => {
+        const promise = new SynchronousPromise((resolve, reject) => {
             // Abort the transaction
             this._iDbTransaction.abort();
 
@@ -112,7 +113,7 @@ export class Transaction {
     commit() {
         if (!this._iDbTransaction.commit) return // older Zotero versions don't have this
         // Create promise
-        const promise = new Promise((resolve, reject) => {
+        const promise = new SynchronousPromise((resolve, reject) => {
             // Commit the transaction
             this._iDbTransaction.commit();
 

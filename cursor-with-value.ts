@@ -3,6 +3,7 @@
  * Wrapper of the IDBCursorWithValue IndexedDB API object.
  */
 import { Cursor } from "./cursor.js";
+import { SynchronousPromise } from 'synchronous-promise'
 
 export class CursorWithValue extends Cursor {
     private _iDbCursorWithValue: IDBCursorWithValue
@@ -46,7 +47,7 @@ export class CursorWithValue extends Cursor {
      */
     delete(): Promise<void> {
         // Create promise
-        const promise: Promise<void> = new Promise((resolve, reject) => {
+        const promise: Promise<void> = new SynchronousPromise((resolve, reject) => {
             // Delete the current record/object
             const request = this._iDbCursorWithValue.delete();
 
@@ -76,7 +77,7 @@ export class CursorWithValue extends Cursor {
      */
     update(value: any): Promise<IDBValidKey> {
         // Create promise
-        const promise: Promise<IDBValidKey> = new Promise((resolve, reject) => {
+        const promise: Promise<IDBValidKey> = new SynchronousPromise((resolve, reject) => {
             // Update the current record with the new value
             const request = this._iDbCursor.update(value);
 

@@ -4,6 +4,7 @@
  * Do not create an instance of this class, but create your own class that
  * derives from it.
  */
+import { SynchronousPromise } from 'synchronous-promise'
 import { ObjectStore } from "./object-store.js";
 import { Transaction } from "./transaction.js";
 
@@ -75,7 +76,7 @@ export class Database {
         if (this._iDbDatabase) throw new Error('Already open');
 
         // Create promise
-        const promise: Promise<void> = new Promise((resolve, reject) => {
+        const promise: Promise<void> = new SynchronousPromise((resolve, reject) => {
             // Set open the request object
             let openDbRequest = undefined;
 
