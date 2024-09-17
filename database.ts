@@ -47,7 +47,7 @@ export class Database {
 
     /**
      * Get the database name.
-     * @return {String} Then name of the database.
+     * @return {String} The name of the database.
      */
     get name() {
         // Return the name value
@@ -93,9 +93,12 @@ export class Database {
             }
             
             // Handle on error event
-            openDbRequest.onerror = () => {
+            openDbRequest.onerror = (event) => {
                 // Clear interface value
                 this._iDbDatabase = undefined;
+
+                // If connection was blocked then do nothing
+                if (event.target._blocked === true) return;
 
                 // If there is an upgrade error then reject with that instead of the error
                 if (upgradedError)  { reject(upgradedError); return; }
@@ -105,7 +108,14 @@ export class Database {
             };
 
             // Handle on success event
-            openDbRequest.onsuccess = () => {
+            openDbRequest.onsuccess = (event) => {
+                // If connection was blocked
+                if (event.target._blocked === true) {
+                    // Close the database and stop
+                    openDbRequest.result.close();
+                    return;
+                }
+
                 // Set the database interface
                 this._iDbDatabase = openDbRequest.result;
 
@@ -126,7 +136,18 @@ export class Database {
             };
 
             // Handle on upgrade needed event
-            openDbRequest.onupgradeneeded = (event: IDBVersionChangeEvent) => {
+            openDbRequest.onupgradeneeded = (event) => {
+                // If connection was blocked
+                if (event.target._blocked === true) {
+                    // We have already rejected this database connect, and this "openDbRequest"
+                    // object is kept around until the database connection blocking it was closed, so
+                    // it may have been hanging around for some time.
+
+                    // Close the database and stop
+                    openDbRequest.result.close();
+                    return;
+                }
+
                 // Set the database interface
                 this._iDbDatabase = (event.target as IDBOpenDBRequest).result;
 
@@ -163,15 +184,12 @@ export class Database {
             };
 
             // Handle on blocked event
-            openDbRequest.onblocked = (event: IDBVersionChangeEvent) => {
-                const idbDatabase = (event.target as IDBOpenDBRequest).result;
-                const { oldVersion, newVersion } = event
-                try {
-                  this._blocked(idbDatabase, oldVersion, newVersion, openDbRequest.error)
-                }
-                catch (err) {
-                  reject(err)
-                }
+            openDbRequest.onblocked = () => {
+                // Set blocked flag
+                openDbRequest._blocked = true;
+                
+                // Reject the promise with "blocked" error
+                reject(new Error('Blocked'));
             }
         });
 
