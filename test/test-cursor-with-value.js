@@ -1,11 +1,11 @@
 /**
  * Test cursor with value.
  */
-import { Database } from "../database.js";
-import { Transaction } from "../transaction.js";
-import { ObjectStore } from "../object-store.js";
-import { Index } from "../index.js";
-import { CursorWithValue } from "../cursor-with-value.js";
+import { Database } from "../dist/database.js";
+import { Transaction } from "../dist/transaction.js";
+import { ObjectStore } from "../dist/object-store.js";
+import { Index } from "../dist/index.js";
+import { CursorWithValue } from "../dist/cursor-with-value.js";
 import Tools from "./tools.js";
 import Test from "./test.js";
 

@@ -1,9 +1,9 @@
 /**
  * Test object store.
  */
-import { Database } from "../database.js";
-import { Transaction } from "../transaction.js";
-import { ObjectStore } from "../object-store.js";
+import { Database } from "../dist/database.js";
+import { Transaction } from "../dist/transaction.js";
+import { ObjectStore } from "../dist/object-store.js";
 import Tools from "./tools.js";
 import Test from "./test.js";
 

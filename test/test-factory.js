@@ -1,8 +1,8 @@
 /**
  * Test factory.
  */
-import { Database } from "../database.js";
-import { Factory } from "../factory.js";
+import { Database } from "../dist/database.js";
+import { Factory } from "../dist/factory.js";
 import Tools from "./tools.js";
 import Test from "./test.js";
 

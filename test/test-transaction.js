@@ -1,8 +1,8 @@
 /**
  * Test transaction.
  */
-import { Database } from "../database.js";
-import { Transaction } from "../transaction.js";
+import { Database } from "../dist/database.js";
+import { Transaction } from "../dist/transaction.js";
 import Tools from "./tools.js";
 import Test from "./test.js";
 

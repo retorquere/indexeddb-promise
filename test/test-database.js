@@ -1,7 +1,7 @@
 /**
  * Test database.
  */
-import { Database } from "../database.js";
+import { Database } from "../dist/database.js";
 import Tools from "./tools.js";
 import Test from "./test.js";
 

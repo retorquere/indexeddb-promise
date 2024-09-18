@@ -98,7 +98,7 @@ export class Database {
                 this._iDbDatabase = undefined;
 
                 // If connection was blocked then do nothing
-                if (event.target._blocked === true) return;
+                if ((event.target! as any)._blocked === true) return;
 
                 // If there is an upgrade error then reject with that instead of the error
                 if (upgradedError)  { reject(upgradedError); return; }
@@ -110,7 +110,7 @@ export class Database {
             // Handle on success event
             openDbRequest.onsuccess = (event) => {
                 // If connection was blocked
-                if (event.target._blocked === true) {
+                if ((event.target! as any)._blocked === true) {
                     // Close the database and stop
                     openDbRequest.result.close();
                     return;
@@ -138,7 +138,7 @@ export class Database {
             // Handle on upgrade needed event
             openDbRequest.onupgradeneeded = (event) => {
                 // If connection was blocked
-                if (event.target._blocked === true) {
+                if ((event.target! as any)._blocked === true) {
                     // We have already rejected this database connect, and this "openDbRequest"
                     // object is kept around until the database connection blocking it was closed, so
                     // it may have been hanging around for some time.
@@ -186,7 +186,7 @@ export class Database {
             // Handle on blocked event
             openDbRequest.onblocked = () => {
                 // Set blocked flag
-                openDbRequest._blocked = true;
+                (openDbRequest as any)._blocked = true;
                 
                 // Reject the promise with "blocked" error
                 reject(new Error('Blocked'));
@@ -268,19 +268,6 @@ export class Database {
     _upgrade(transaction: Transaction, oldVersion: number, newVersion: number | null): void | Promise<void> {
         // Must never get here
         throw new Error('Database._upgrade is not overridden');
-    }
-
-    /**
-     * Override function that is called when the database is being deleted and there is an old version
-     * which needs to be closed. Replace this function to update all the parts required. It can
-     * be an async function or not. You must not use await on any non-indexedDb asynchronous functions.
-     * while performing any upgrade steps.
-     * @param {Number} oldVersion The current version of the database that needs upgrading.
-     * @param {Number} newVersion The new version the database is upgrading to.
-     * @override
-     */
-    _blocked(_idbDatabase: IDBDatabase, _oldVersion: number, _newVersion: number | null, error: DOMException | null): void {
-        if (error) throw error
     }
 
     /**
