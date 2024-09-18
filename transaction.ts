@@ -112,6 +112,7 @@ export class Transaction {
      */
     commit() {
         if (!this._iDbTransaction.commit) return // older Zotero versions don't have this
+        if (this._iDbTransaction.mode === 'readonly') return // FF seems to error out if you commit a read-only transaction
         // Create promise
         const promise = new SynchronousPromise((resolve, reject) => {
             // Commit the transaction
