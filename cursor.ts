@@ -121,7 +121,7 @@ export class Cursor {
      * @param {*} [key] The key use to find the next record.
      * @return {Promise<Boolean>} A promise that resolves to either true (found) or false (end of cursor).
      */
-    continue(key: IDBValidKey): Promise<boolean> {
+    continue(key?: IDBValidKey): Promise<boolean> {
         // Create promise
         const promise: Promise<boolean> = new SynchronousPromise((resolve, reject) => {
             // Handle on error event
